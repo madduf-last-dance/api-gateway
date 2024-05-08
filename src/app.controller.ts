@@ -8,8 +8,8 @@ export class AppController {
 
   @Get()
   getHello() {
-    return this.appService.getHello().pipe(
-      map((response) => response),
-    );
+    // return this.appService.getHello().pipe(
+    //   map((response) => response),
+    // );
   }
 }
