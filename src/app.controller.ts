@@ -1,15 +1,17 @@
-import { Controller, Get } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Post } from "@nestjs/common";
 import { AppService } from "./app.service";
-import { map } from "rxjs/operators";
+import { ClientProxy } from "@nestjs/microservices";
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    @Inject("RESERVATION_SERVICE") private readonly reservationClient:
+      ClientProxy,
+  ) {}
 
-  @Get()
-  getHello() {
-    return this.appService.getHello().pipe(
-      map((response) => response),
-    );
+  @Post("reserve")
+  getHello(@Body() reservation: any) {
+    return this.reservationClient.send<string>("reserve", reservation);
   }
 }
