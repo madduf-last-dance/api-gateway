@@ -48,7 +48,12 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
       },
     ]),
   ],
-  controllers: [AppController, UserController, ReservationController, AccommodationController],
+  controllers: [
+    AppController,
+    UserController,
+    ReservationController,
+    AccommodationController,
+  ],
   providers: [AppService],
 })
 export class AppModule {}
