@@ -6,11 +6,16 @@ import { ValidationPipe } from "@nestjs/common";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const options = new DocumentBuilder()
-    .setTitle("Cats example")
-    .setDescription("The cats API description")
-    .setVersion("1.0")
-    .addTag("cats")
+    .setTitle('Reservation API')
+    .setDescription('API for managing reservations')
+    .setVersion('0.1')
     .addBearerAuth()
+    .addTag('Reservation', 'Endpoints related to reservation management')
+    .setTitle('Accommodation API')
+    .setDescription('API for managing accommodations')
+    .setVersion('0.1')
+    .addBearerAuth()
+    .addTag('Accommodation', 'Endpoints related to accommodation management')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup("api", app, document);
