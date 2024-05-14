@@ -4,7 +4,9 @@ import { AuthGuard } from "src/guard/auth.guard";
 import { LoginDto } from "./dtos/login.dto";
 import { RegisterDto } from "./dtos/register.dto";
 import { register } from "module";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("User")
 @Controller("user")
 export class UserController {
   constructor(
@@ -14,14 +16,11 @@ export class UserController {
   login(@Body() loginDto: LoginDto) {
     return this.userClient
       .send<string>("login", loginDto)
-      .pipe(
-        (response) => response,
-      );
+      .pipe((response) => response);
   }
   @Post("/register")
   register(@Body() registerDto: RegisterDto) {
-    return this.userClient
-      .send<string>("register", registerDto);
+    return this.userClient.send<string>("register", registerDto);
   }
   @Get("/test")
   @UseGuards(AuthGuard)
