@@ -3,7 +3,8 @@ import { ClientProxy } from "@nestjs/microservices";
 import { AuthGuard } from "src/guard/auth.guard";
 import { LoginDto } from "./dtos/login.dto";
 import { RegisterDto } from "./dtos/register.dto";
-import { register } from "module";
+import { UpdateUserDto } from "./dtos/update.dto";
+import { Role } from "./dtos/role.enum";
 
 @Controller("user")
 export class UserController {
@@ -18,10 +19,20 @@ export class UserController {
         (response) => response,
       );
   }
-  @Post("/register")
-  register(@Body() registerDto: RegisterDto) {
+  @Post("/register/guest")
+  registerGuest(@Body() registerDto: RegisterDto) {
     return this.userClient
-      .send<string>("register", registerDto);
+      .send<string>("registerGuest", registerDto);
+  }
+  @Post("/register/host")
+  registerHost(@Body() registerDto: RegisterDto) {
+    return this.userClient
+      .send<string>("registerHost", registerDto);
+  }
+  @Post("/update")
+  update(@Body() updateDto: UpdateUserDto) {
+    return this.userClient
+      .send<string>("updateUser", updateDto);
   }
   @Get("/test")
   @UseGuards(AuthGuard)

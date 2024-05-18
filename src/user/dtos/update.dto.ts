@@ -1,8 +1,13 @@
-import { IsEmail, IsNotEmpty } from "class-validator";
-import { Role } from "./role.enum";
+import { OmitType, PartialType } from "@nestjs/mapped-types";
+import { RegisterDto } from "./register.dto";
 import { ApiProperty } from "@nestjs/swagger";
 
-export class RegisterDto {
+export class UpdateUserDto extends PartialType(
+  OmitType(RegisterDto, ["password"] as const),
+) {
+  @ApiProperty()
+  id: number;
+
   @ApiProperty()
   name: string;
 
