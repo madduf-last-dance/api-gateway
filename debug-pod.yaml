@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug-pod
+spec:
+  containers:
+  - name: debug-container
+    image: busybox
+    command: ["sleep", "3600"]
+    volumeMounts:
+      - name: kaniko-context
+        mountPath: /workspace
+  volumes:
+    - name: kaniko-context
+      hostPath:
+        path: /Users/nedeljkovignjevic/Desktop/repositories/hotel-reservation-app/api-gateway
