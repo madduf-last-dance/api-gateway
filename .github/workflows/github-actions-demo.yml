@@ -1,0 +1,56 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - feature/kubernetes
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Minikube
+      uses: manusa/actions-setup-minikube@v2.4.1
+      with:
+        minikube version: 'latest'
+        kubernetes version: 'latest'
+
+    - name: Start Minikube
+      run: minikube start --driver=docker
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v1
+      with:
+        version: 'latest'
+
+    - name: Create Kaniko secret
+      run: |
+        kubectl create secret docker-registry kaniko-secret \
+          --docker-username=${{ secrets.DOCKER_USERNAME }} \
+          --docker-password=${{ secrets.DOCKER_PASSWORD }} \
+          --docker-email=${{ secrets.DOCKER_EMAIL }}
+
+    - name: Create workspace directory in Minikube
+      run: |
+        minikube ssh -- mkdir -p /workspace
+
+    - name: Copy code to Minikube workspace
+      run: |
+        minikube cp . /workspace
+
+    - name: Build Docker image with Kaniko
+      run: |
+        kubectl run kaniko --image=gcr.io/kaniko-project/executor:latest --restart=Never -- \
+          --dockerfile=/workspace/Dockerfile --context=dir://workspace --destination=${{ secrets.DOCKER_REGISTRY }}/api-gateway:latest
+
+    - name: Wait for Kaniko to finish
+      run: |
+        kubectl wait --for=condition=complete pod/kaniko --timeout=10m
+
+    - name: Clean up Kaniko pod
+      run: |
+        kubectl delete pod kaniko
