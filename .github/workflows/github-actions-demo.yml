@@ -30,7 +30,7 @@ jobs:
     - name: Create workspace directory in Minikube
       run: |
         minikube ssh -- sudo mkdir -p workspace
-        minikube ssh -- ls
+        minikube ssh -- ls -R /home/docker/workspace/
 
     - name: Copy code to Minikube workspace
       run: |
