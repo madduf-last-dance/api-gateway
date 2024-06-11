@@ -10,11 +10,13 @@ spec:
         image: gcr.io/kaniko-project/executor:latest
         args:
         - --dockerfile=/workspace/Dockerfile
-        - --context=dir://workspace
-        - --destination=${{ secrets.DOCKER_REGISTRY }}/api-gateway:latest
+        - --context=/workspace
+        - --destination=nedeljkovignjevic/api-gateway:latest
         volumeMounts:
           - name: kaniko-secret
             mountPath: /kaniko/.docker
+          - name: workspace
+            mountPath: /workspace
       restartPolicy: Never
       volumes:
       - name: kaniko-secret
@@ -23,3 +25,6 @@ spec:
           items:
             - key: .dockerconfigjson
               path: config.json
+      - name: workspace
+        persistentVolumeClaim:
+          claimName: workspace-claim

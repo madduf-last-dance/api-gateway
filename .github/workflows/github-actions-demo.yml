@@ -29,41 +29,18 @@ jobs:
 
     - name: Create workspace directory in Minikube
       run: |
-        minikube ssh -- sudo mkdir -p /workspace
+        minikube ssh -- sudo mkdir -p workspace
 
     - name: Copy code to Minikube workspace
       run: |
-        minikube cp ./Dockerfile /workspace/
+        minikube cp Dockerfile minikube:/home/docker/workspace/ 
+        minikube cp tsconfig.json minikube:/home/docker/workspace/
+        minikube cp tsconfig.build.json minikube:/home/docker/workspace/
 
     - name: Create Kaniko Job to build the image and to push the image to dockerhub
       run: |
-        cat <<EOF | kubectl apply -f -
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: kaniko-job
-        spec:
-          template:
-            spec:
-              containers:
-              - name: kaniko
-                image: gcr.io/kaniko-project/executor:latest
-                args:
-                - --dockerfile=/workspace/Dockerfile
-                - --context=dir://workspace
-                - --destination=${{ secrets.DOCKER_REGISTRY }}/api-gateway:latest
-                volumeMounts:
-                - name: kaniko-secret
-                  mountPath: /kaniko/.docker
-              restartPolicy: Never
-              volumes:
-              - name: kaniko-secret
-                secret:
-                  secretName: regcred
-                  items:
-                  - key: .dockerconfigjson
-                    path: config.json
-        EOF
+        kubectl apply -f -volume.yaml
+        kubectl apply -f job.yaml
 
     - name: Get Kaniko Job Events (if job fails)
       run: |
