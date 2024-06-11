@@ -27,6 +27,11 @@ jobs:
           --docker-password=${{ secrets.DOCKER_PASSWORD }} \
           --docker-email=${{ secrets.DOCKER_EMAIL }}
 
+    - name: Check pwd
+      run: |
+        minikube ssh
+        pwd
+
     - name: Create workspace directory in Minikube
       run: |
         minikube ssh -- sudo mkdir -p workspace
