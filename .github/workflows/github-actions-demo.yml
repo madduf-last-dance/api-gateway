@@ -32,7 +32,7 @@ jobs:
 
     - name: Copy code to Minikube workspace
       run: |
-        minikube sudo cp . /workspace
+        minikube cp . /workspace
 
     - name: Build Docker image with Kaniko
       run: |
