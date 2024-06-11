@@ -1,3 +1,13 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: waitforfirstconsumer-storage
+provisioner: k8s.io/minikube-hostpath
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Delete
+
+---
+
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -9,13 +19,11 @@ spec:
     storage: 10Gi
   accessModes:
     - ReadWriteOnce
-  storageClassName: standard
+  storageClassName: waitforfirstconsumer-storage
   hostPath:
     path: /home/docker/workspace
 
-
 ---
-
 
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -27,4 +35,4 @@ spec:
   resources:
     requests:
       storage: 8Gi
-  storageClassName: standard
+  storageClassName: waitforfirstconsumer-storage
