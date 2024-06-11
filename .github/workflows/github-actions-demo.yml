@@ -7,25 +7,17 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-lates
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
     - name: Set up Minikube
-      uses: manusa/actions-setup-minikube@v2.4.1
-      with:
-        minikube version: 'latest'
-        kubernetes version: 'latest'
+      uses: medyagh/setup-minikube@master
 
     - name: Start Minikube
       run: minikube start --driver=docker
-
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v1
-      with:
-        version: 'latest'
 
     - name: Create Kaniko secret
       run: |
