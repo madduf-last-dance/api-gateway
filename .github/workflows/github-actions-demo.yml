@@ -28,11 +28,11 @@ jobs:
 
     - name: Create workspace directory in Minikube
       run: |
-        minikube ssh -- mkdir -p /workspace
+        minikube ssh -- sudo mkdir -p /workspace
 
     - name: Copy code to Minikube workspace
       run: |
-        minikube cp . /workspace
+        minikube sudo cp . /workspace
 
     - name: Build Docker image with Kaniko
       run: |
