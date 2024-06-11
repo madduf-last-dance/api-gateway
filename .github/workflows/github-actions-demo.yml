@@ -29,8 +29,7 @@ jobs:
 
     - name: Check pwd
       run: |
-        minikube ssh
-        pwd
+        minikube ssh -- pwd
 
     - name: Create workspace directory in Minikube
       run: |
