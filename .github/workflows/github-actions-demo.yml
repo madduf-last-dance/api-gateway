@@ -64,7 +64,7 @@ jobs:
       run: |
         kubectl wait --for=condition=Ready pod/kaniko
 
-      - name: Get Kaniko Pod Logs
+    - name: Get Kaniko Pod Logs
       run: |
         kubectl logs kaniko
 
