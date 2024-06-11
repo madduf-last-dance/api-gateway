@@ -42,6 +42,10 @@ jobs:
         kubectl create -f volume.yaml --v=6
         kubectl create -f job.yaml --v=6
 
+    - name: asd
+      run: |
+        kubectl describe pvc workspace-claim --v=6
+
     - name: Get Kaniko Job Events (if job fails)
       run: |
         kubectl events
