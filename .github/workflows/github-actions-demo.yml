@@ -35,6 +35,8 @@ jobs:
     - name: Copy code to Minikube workspace
       run: |
         minikube cp Dockerfile minikube:/home/docker/workspace/ 
+        minikube cp package.json minikube:/home/docker/workspace/ 
+        minikube cp package-lock.json minikube:/home/docker/workspace/ 
         minikube cp tsconfig.json minikube:/home/docker/workspace/
         minikube cp tsconfig.build.json minikube:/home/docker/workspace/
         minikube ssh -- ls -R /home/docker/workspace/
