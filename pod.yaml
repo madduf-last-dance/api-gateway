@@ -20,3 +20,29 @@ spec:
         items:
           - key: .dockerconfigjson
             path: config.json
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kaniko-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: kaniko
+        image: gcr.io/kaniko-project/executor:latest
+        args:
+        - --dockerfile=/workspace/Dockerfile
+        - --context=dir://workspace
+        - --destination=${{ secrets.DOCKER_REGISTRY }}/api-gateway:latest
+        volumeMounts:
+          - name: kaniko-secret
+            mountPath: /kaniko/.docker
+      restartPolicy: Never
+      volumes:
+      - name: kaniko-secret
+        secret:
+          secretName: regcred
+          items:
+            - key: .dockerconfigjson
+              path: config.json
