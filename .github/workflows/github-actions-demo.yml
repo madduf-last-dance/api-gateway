@@ -79,9 +79,23 @@ jobs:
       run: |
         kubectl logs kaniko --v=6
 
-    - name: WAIT WHEN READY=FALSE
+    - name: Monitor Kaniko Pod status
       run: |
-        kubectl wait --for=condition=Ready-false pod/kaniko
+        for ((i=0; i<30; i++)); do
+          KANIKO_POD_STATUS=$(kubectl get pod kaniko -o jsonpath='{.status.phase}')
+          if [[ "$KANIKO_POD_STATUS" == "Succeeded" ]]; then
+            echo "Kaniko Pod has completed successfully."
+            exit 0
+          elif [[ "$KANIKO_POD_STATUS" == "Failed" ]]; then
+            echo "Kaniko Pod has failed."
+            exit 1
+          else
+            echo "Kaniko Pod is still running, current status: $KANIKO_POD_STATUS"
+            sleep 5
+          fi
+        done
+        echo "Kaniko Pod did not complete within the expected time."
+        exit 1
 
     - name: Get Kaniko Pod Logs
       run: |
