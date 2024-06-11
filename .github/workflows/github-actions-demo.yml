@@ -48,7 +48,7 @@ jobs:
         kubectl create -f volume.yaml --v=6
         kubectl create -f pod-test.yaml --v=6
 
-    - name: asd
+    - name: Describe Workspace claim 
       run: |
         kubectl describe pvc workspace-claim --v=6
 
@@ -56,17 +56,29 @@ jobs:
       run: |
         kubectl events
 
-    - name: Get Kaniko Job Events
+    - name: Get Kaniko Pod Logs
       run: |
-        kubectl events
+        kubectl logs kaniko --v
+
+    - name: get pods
+      run: |
+        kubectl get pods
+
+    - name: Get Kaniko Pod Logs
+      run: |
+        kubectl logs kaniko --v
+
+    - name: GET KANIKO LOGS
+      run: |
+        kubectl logs kaniko
 
     - name: Watch kaniko job events real time
       run: |
         kubectl get events -w --v=6
 
-    - name: Get Kaniko Pod Logs
+    - name: GET KANIKO LOGS
       run: |
-        kubectl logs kaniko --v
+        kubectl logs kaniko
 
     - name: Describe Kaniko pod (if job fails)
       if: failure()
