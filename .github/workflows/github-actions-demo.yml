@@ -100,20 +100,20 @@ jobs:
     - name: Kaniko logs (if job fails)
       if: failure()
       run: |
-        kubectl logs kaniko
+        kubectl logs kaniko --v=6
 
     - name: Kaniko events (if job fails)
       if: failure()
       run: |
-        kubectl events kaniko
+        kubectl events kaniko --v=6
 
     - name: Get Kaniko Pod Logs
       run: |
-        kubectl logs kaniko
+        kubectl logs kaniko --v=6
 
     - name: GET KANIKO LOGS
       run: |
-        kubectl logs kaniko
+        kubectl logs kaniko --v=6
 
     - name: Watch kaniko job events real time
       run: |
@@ -121,12 +121,12 @@ jobs:
 
     - name: GET KANIKO LOGS
       run: |
-        kubectl logs kaniko
+        kubectl logs kaniko --v=6
 
     - name: Describe Kaniko pod (if job fails)
       if: failure()
       run: |
-        kubectl describe pod kaniko
+        kubectl describe pod kaniko --v=6
 
     - name: Clean up Kaniko pod
       run: |
