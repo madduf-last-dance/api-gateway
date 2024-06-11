@@ -21,7 +21,7 @@ jobs:
 
     - name: Check storageclass
       run: kubectl get storageclass
-      
+
     - name: Describe sc
       run: kubectl describe sc
 
@@ -46,7 +46,7 @@ jobs:
     - name: Create Kaniko Job to build the image and to push the image to dockerhub
       run: |
         kubectl create -f volume.yaml --v=6
-        kubectl create -f job.yaml --v=6
+        kubectl create -f pod-test.yaml --v=6
 
     - name: asd
       run: |
@@ -64,24 +64,15 @@ jobs:
       run: |
         kubectl get events -w --v=6
 
-    - name: Wait for Kaniko Job to finish
+    - name: Get Kaniko Pod Logs
       run: |
-        kubectl wait --for=condition=complete job/kaniko-job --timeout=2m --v=6
+        kubectl logs kaniko --v
 
-    - name: Get Kaniko Job Events
-      run: |
-        kubectl events --v
-
-    - name: Get Kaniko Job Events for kaniko-job
+    - name: Describe Kaniko pod (if job fails)
       if: failure()
       run: |
-        kubectl get events --field-selector involvedObject.name=kaniko-job
+        kubectl describe pod kaniko
 
-    - name: Describe Kaniko Job (if job fails)
-      if: failure()
+    - name: Clean up Kaniko pod
       run: |
-        kubectl describe job kaniko-job
-
-    - name: Clean up Kaniko Job
-      run: |
-        kubectl delete job kaniko-job
+        kubectl delete pod kaniko
