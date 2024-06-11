@@ -43,8 +43,6 @@ jobs:
 
     - name: Create Kaniko Job to build the image and to push the image to dockerhub
       run: |
-        kubectl delete -f volume.yaml
-        kubectl delete -f job.yaml
         kubectl create -f volume.yaml
         kubectl create -f job.yaml
 
