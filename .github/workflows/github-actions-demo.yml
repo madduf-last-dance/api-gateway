@@ -56,7 +56,7 @@ jobs:
 
     - name: Watch kaniko job events real time
       run: |
-        kubectl get events -w
+        kubectl get events -w --v=6
 
     - name: Wait for Kaniko Job to finish
       run: |
