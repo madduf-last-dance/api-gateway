@@ -43,8 +43,8 @@ jobs:
 
     - name: Create Kaniko Job to build the image and to push the image to dockerhub
       run: |
-        kubectl create -f volume.yaml
-        kubectl create -f job.yaml
+        kubectl create -f volume.yaml --v=6
+        kubectl create -f job.yaml --v=6
 
     - name: Get Kaniko Job Events (if job fails)
       run: |
@@ -56,7 +56,7 @@ jobs:
 
     - name: Wait for Kaniko Job to finish
       run: |
-        kubectl wait --for=condition=complete job/kaniko-job --timeout=5m
+        kubectl wait --for=condition=complete job/kaniko-job --timeout=2m
 
     - name: Get Kaniko Job Events (if job fails)
       run: |
