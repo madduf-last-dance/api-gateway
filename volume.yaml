@@ -6,10 +6,10 @@ metadata:
     type: local
 spec:
   capacity:
-    storage: 500Mi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
-  storageClassName: standard
+  storageClassName: local-storage
   hostPath:
     path: /home/docker/workspace
 
@@ -26,5 +26,5 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 500Mi
-  storageClassName: standard
+      storage: 1Gi
+  storageClassName: local-storage

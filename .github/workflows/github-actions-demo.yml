@@ -19,9 +19,11 @@ jobs:
     - name: Start Minikube
       run: minikube start --driver=docker
 
-
     - name: Check storageclass
       run: kubectl get storageclass
+
+    - name: Describe sc
+      run: kubectl describe sc
 
     - name: Create Kaniko secret
       run: |
