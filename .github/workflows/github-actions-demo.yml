@@ -67,7 +67,17 @@ jobs:
 
     - name: Wait for Kaniko Job to finish
       run: |
-        kubectl wait --for=condition=complete job/kaniko-job --timeout=10m
+        kubectl wait --for=condition=complete job/kaniko-job --timeout=5m
+
+    - name: Get Kaniko Job Logs (if job fails)
+      if: failure()
+      run: |
+        kubectl logs $(kubectl get pods --selector=job-name=kaniko-job --output=jsonpath={.items..metadata.name})
+
+    - name: Describe Kaniko Job (if job fails)
+      if: failure()
+      run: |
+        kubectl describe job kaniko-job
 
     - name: Clean up Kaniko Job
       run: |
