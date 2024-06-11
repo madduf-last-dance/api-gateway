@@ -27,10 +27,6 @@ jobs:
           --docker-password=${{ secrets.DOCKER_PASSWORD }} \
           --docker-email=${{ secrets.DOCKER_EMAIL }}
 
-    - name: Check pwd
-      run: |
-        minikube ssh -- pwd
-
     - name: Create workspace directory in Minikube
       run: |
         minikube ssh -- sudo mkdir -p workspace
@@ -56,13 +52,13 @@ jobs:
 
     - name: Wait for Kaniko Job to finish
       run: |
-        kubectl wait --for=condition=complete job/kaniko-job --timeout=2m --v=6
+        kubectl wait --for=condition=complete job/kaniko-job --timeout=2m --v
 
-    - name: Get Kaniko Job Events (if job fails)
+    - name: Get Kaniko Job Events
       run: |
-        kubectl events
+        kubectl events --v
 
-    - name: Get Kaniko Job Events for kaniko-job (if job fails)
+    - name: Get Kaniko Job Events for kaniko-job
       if: failure()
       run: |
         kubectl get events --field-selector involvedObject.name=kaniko-job
