@@ -44,21 +44,9 @@ jobs:
         kubectl create -f workspace-volume.yaml
         kubectl create -f kaniko-job.yaml
 
-    - name: get jobs
-      run: |
-        kubectl get jobs --v=6
-
     - name: Wait for Kaniko Job to be COMPLETED
       run: |
         kubectl wait --for=condition=Complete job/kaniko-job --timeout=5m
-
-    - name: get jobs
-      run: |
-        kubectl get jobs --v=6
-
-    - name: get logs for kaniko-job
-      run: |
-        kubectl logs job/kaniko-job --v=6
 
     - name: Clean up Kaniko job
       run: |
