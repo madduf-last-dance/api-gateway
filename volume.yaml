@@ -9,7 +9,7 @@ spec:
     storage: 10Gi
   accessModes:
     - ReadWriteOnce
-  storageClassName: local-storage
+  storageClassName: standard
   hostPath:
     path: /home/docker/workspace
 
@@ -27,4 +27,4 @@ spec:
   resources:
     requests:
       storage: 8Gi
-  storageClassName: local-storage
+  storageClassName: standard
