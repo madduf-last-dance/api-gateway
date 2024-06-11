@@ -39,7 +39,7 @@ jobs:
 
     - name: Create Kaniko Job to build the image and to push the image to dockerhub
       run: |
-        kubectl apply -f -volume.yaml
+        kubectl apply -f volume.yaml
         kubectl apply -f job.yaml
 
     - name: Get Kaniko Job Events (if job fails)
