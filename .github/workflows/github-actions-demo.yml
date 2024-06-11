@@ -30,12 +30,14 @@ jobs:
     - name: Create workspace directory in Minikube
       run: |
         minikube ssh -- sudo mkdir -p workspace
+        minikube ssh -- ls
 
     - name: Copy code to Minikube workspace
       run: |
         minikube cp Dockerfile minikube:/home/docker/workspace/ 
         minikube cp tsconfig.json minikube:/home/docker/workspace/
         minikube cp tsconfig.build.json minikube:/home/docker/workspace/
+        minikube ssh -- tree
 
     - name: Create Kaniko Pod to build the image and to push the image to dockerhub
       run: |
