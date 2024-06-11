@@ -22,6 +22,6 @@ spec:
         items:
           - key: .dockerconfigjson
             path: config.json
-      - name: workspace
-        persistentVolumeClaim:
-          claimName: workspace-claim
+    - name: workspace
+      persistentVolumeClaim:
+        claimName: workspace-claim
