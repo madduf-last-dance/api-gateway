@@ -6,12 +6,14 @@ spec:
   containers:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
-    args: ["--dockerfile=Dockerfile",
-            "--context=git://github.com/madduf-last-dance/api-gateway.git#feature/kubernetes",
-            "--destination=nedeljkovignjevic/api-gateway:1.0.0"]
+    args: ["--dockerfile=/workspace/Dockerfile",
+            "--context=/workspace",
+            "--destination=nedeljkovignjevic/api-gateway:latest"]
     volumeMounts:
       - name: kaniko-secret
         mountPath: /kaniko/.docker
+      - name: workspace
+        mountPath: /workspace
   restartPolicy: Never
   volumes:
     - name: kaniko-secret
@@ -20,3 +22,6 @@ spec:
         items:
           - key: .dockerconfigjson
             path: config.json
+    - name: workspace
+      persistentVolumeClaim:
+        claimName: workspace-claim

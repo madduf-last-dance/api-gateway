@@ -30,7 +30,6 @@ jobs:
     - name: Create workspace directory in Minikube
       run: |
         minikube ssh -- sudo mkdir -p workspace
-        minikube ssh -- ls
 
     - name: Copy code to Minikube workspace
       run: |
@@ -39,99 +38,16 @@ jobs:
         minikube cp package-lock.json minikube:/home/docker/workspace/ 
         minikube cp tsconfig.json minikube:/home/docker/workspace/
         minikube cp tsconfig.build.json minikube:/home/docker/workspace/
-        minikube ssh -- ls -R /home/docker/workspace/
 
-    - name: Create Kaniko Pod to build the image and to push the image to dockerhub
+    - name: Create Kaniko Job to build the image and to push the image to dockerhub
       run: |
-        kubectl create -f volume.yaml --v=6
-        kubectl create -f pod-test.yaml --v=6
+        kubectl create -f workspace-volume.yaml
+        kubectl create -f kaniko-job.yaml
 
-
-    - name: Check whether the volume mounted correctly
+    - name: Wait for Kaniko Job to be completed
       run: |
-        kubectl get pv workspace-volume
+        kubectl wait --for=condition=Complete job/kaniko-job
 
-    - name: Describe Workspace claim 
+    - name: Clean up Kaniko job
       run: |
-        kubectl describe pvc workspace-claim --v=6
-
-    - name: Get Events
-      run: |
-        kubectl events
-
-    - name: get pods
-      run: |
-        kubectl get pods
-
-    - name: WAIT WHEN READY
-      run: |
-        kubectl wait --for=condition=Ready pod/kaniko
-
-    - name: get pods
-      run: |
-        kubectl get pods --v=6
-
-    - name: Get Kaniko Pod Logs
-      run: |
-        kubectl logs kaniko --v=6
-
-    - name: Get Kaniko Pod Events
-      run: |
-        kubectl events kaniko --v=6
-
-    - name: GET KANIKO LOGS
-      run: |
-        kubectl logs kaniko --v=6
-
-    - name: Monitor Kaniko Pod status
-      run: |
-        for ((i=0; i<30; i++)); do
-          KANIKO_POD_STATUS=$(kubectl get pod kaniko -o jsonpath='{.status.phase}')
-          if [[ "$KANIKO_POD_STATUS" == "Succeeded" ]]; then
-            echo "Kaniko Pod has completed successfully."
-            exit 0
-          elif [[ "$KANIKO_POD_STATUS" == "Failed" ]]; then
-            echo "Kaniko Pod has failed."
-            exit 1
-          else
-            echo "Kaniko Pod is still running, current status: $KANIKO_POD_STATUS"
-            sleep 10
-          fi
-        done
-        echo "Kaniko Pod did not complete within the expected time."
-        exit 1
-
-    - name: Kaniko logs (if job fails)
-      if: failure()
-      run: |
-        kubectl logs kaniko --v=6
-
-    - name: Kaniko events (if job fails)
-      if: failure()
-      run: |
-        kubectl events kaniko --v=6
-
-    - name: Get Kaniko Pod Logs
-      run: |
-        kubectl logs kaniko --v=6
-
-    - name: GET KANIKO LOGS
-      run: |
-        kubectl logs kaniko --v=6
-
-    - name: Watch kaniko job events real time
-      run: |
-        kubectl get events -w --v=6
-
-    - name: GET KANIKO LOGS
-      run: |
-        kubectl logs kaniko --v=6
-
-    - name: Describe Kaniko pod (if job fails)
-      if: failure()
-      run: |
-        kubectl describe pod kaniko --v=6
-
-    - name: Clean up Kaniko pod
-      run: |
-        kubectl delete pod kaniko
+        kubectl delete job kaniko-job
