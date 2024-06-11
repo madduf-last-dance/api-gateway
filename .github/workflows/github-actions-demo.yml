@@ -91,11 +91,21 @@ jobs:
             exit 1
           else
             echo "Kaniko Pod is still running, current status: $KANIKO_POD_STATUS"
-            sleep 5
+            sleep 10
           fi
         done
         echo "Kaniko Pod did not complete within the expected time."
         exit 1
+
+    - name: Kaniko logs (if job fails)
+      if: failure()
+      run: |
+        kubectl logs kaniko
+
+    - name: Kaniko events (if job fails)
+      if: failure()
+      run: |
+        kubectl events kaniko
 
     - name: Get Kaniko Pod Logs
       run: |
