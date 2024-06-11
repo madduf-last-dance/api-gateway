@@ -52,7 +52,7 @@ jobs:
 
     - name: Wait for Kaniko Job to finish
       run: |
-        kubectl wait --for=condition=complete job/kaniko-job --timeout=30s
+        kubectl wait --for=condition=complete job/kaniko-job --timeout=5m
 
     - name: Get Kaniko Job Events (if job fails)
       run: |
