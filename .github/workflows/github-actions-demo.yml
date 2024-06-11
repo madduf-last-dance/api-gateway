@@ -74,6 +74,11 @@ jobs:
       run: |
         kubectl logs kaniko-job
 
+    - name: Get Kaniko Job Events (if job fails)
+      if: failure()
+      run: |
+        kubectl events
+
     - name: Describe Kaniko Job (if job fails)
       if: failure()
       run: |
