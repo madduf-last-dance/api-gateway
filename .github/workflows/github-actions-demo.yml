@@ -19,12 +19,6 @@ jobs:
     - name: Start Minikube
       run: minikube start --driver=docker
 
-    - name: Check storageclass
-      run: kubectl get storageclass
-
-    - name: Describe sc
-      run: kubectl describe sc
-
     - name: Create Kaniko secret
       run: |
         kubectl create secret docker-registry regcred \
@@ -43,7 +37,7 @@ jobs:
         minikube cp tsconfig.json minikube:/home/docker/workspace/
         minikube cp tsconfig.build.json minikube:/home/docker/workspace/
 
-    - name: Create Kaniko Job to build the image and to push the image to dockerhub
+    - name: Create Kaniko Pod to build the image and to push the image to dockerhub
       run: |
         kubectl create -f volume.yaml --v=6
         kubectl create -f pod-test.yaml --v=6
@@ -52,7 +46,7 @@ jobs:
       run: |
         kubectl describe pvc workspace-claim --v=6
 
-    - name: Get Kaniko Job Events
+    - name: Get Events
       run: |
         kubectl events
 
@@ -67,6 +61,10 @@ jobs:
     - name: Get Kaniko Pod Logs
       run: |
         kubectl logs kaniko
+
+    - name: Get Kaniko Pod Events
+      run: |
+        kubectl events kaniko
 
     - name: GET KANIKO LOGS
       run: |
