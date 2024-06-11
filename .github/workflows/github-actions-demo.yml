@@ -21,7 +21,7 @@ jobs:
 
     - name: Check storageclass
       run: kubectl get storageclass
-
+      
     - name: Describe sc
       run: kubectl describe sc
 
