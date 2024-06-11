@@ -6,7 +6,7 @@ metadata:
     type: local
 spec:
   capacity:
-    storage: 1Gi
+    storage: 100Mi
   accessModes:
     - ReadWriteOnce
   storageClassName: local-storage
@@ -26,5 +26,5 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 100Mi
   storageClassName: local-storage
