@@ -46,13 +46,17 @@ jobs:
       run: |
         kubectl describe pvc workspace-claim --v=6
 
-    - name: Get Kaniko Job Events (if job fails)
+    - name: Get Kaniko Job Events
       run: |
         kubectl events
 
-    - name: Get Kaniko Job Events (if job fails)
+    - name: Get Kaniko Job Events
       run: |
         kubectl events
+
+    - name: Watch kaniko job events real time
+      run: |
+        kubectl get events --field-selector involvedObject.name=kaniko-job -w
 
     - name: Wait for Kaniko Job to finish
       run: |
