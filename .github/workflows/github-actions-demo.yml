@@ -19,6 +19,10 @@ jobs:
     - name: Start Minikube
       run: minikube start --driver=docker
 
+
+    - name: Check storageclass
+      run: kubectl get storageclass
+
     - name: Create Kaniko secret
       run: |
         kubectl create secret docker-registry regcred \
