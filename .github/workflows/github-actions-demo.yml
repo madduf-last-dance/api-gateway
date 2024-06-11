@@ -42,6 +42,11 @@ jobs:
         kubectl create -f volume.yaml --v=6
         kubectl create -f pod-test.yaml --v=6
 
+
+    - name: Check whether the volume mounted correctly
+      run: |
+        kubectl get pv workspace-volume
+
     - name: Describe Workspace claim 
       run: |
         kubectl describe pvc workspace-claim --v=6
@@ -58,17 +63,21 @@ jobs:
       run: |
         kubectl wait --for=condition=Ready pod/kaniko
 
+    - name: get pods
+      run: |
+        kubectl get pods --v=6
+
     - name: Get Kaniko Pod Logs
       run: |
-        kubectl logs kaniko
+        kubectl logs kaniko --v=6
 
     - name: Get Kaniko Pod Events
       run: |
-        kubectl events kaniko
+        kubectl events kaniko --v=6
 
     - name: GET KANIKO LOGS
       run: |
-        kubectl logs kaniko
+        kubectl logs kaniko --v=6
 
     - name: WAIT WHEN READY=FALSE
       run: |
