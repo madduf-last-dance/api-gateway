@@ -56,13 +56,25 @@ jobs:
       run: |
         kubectl events
 
-    - name: Get Kaniko Pod Logs
-      run: |
-        kubectl logs kaniko
-
     - name: get pods
       run: |
         kubectl get pods
+
+    - name: WAIT WHEN READY
+      run: |
+        kubectl wait --for=condition=Ready pod/kaniko
+
+      - name: Get Kaniko Pod Logs
+      run: |
+        kubectl logs kaniko
+
+    - name: GET KANIKO LOGS
+      run: |
+        kubectl logs kaniko
+
+    - name: WAIT WHEN READY=FALSE
+      run: |
+        kubectl wait --for=condition=Ready-false pod/kaniko
 
     - name: Get Kaniko Pod Logs
       run: |
@@ -71,14 +83,6 @@ jobs:
     - name: GET KANIKO LOGS
       run: |
         kubectl logs kaniko
-
-    - name: WAIT WHEN READY
-      run: |
-        kubectl wait --for=condition=Ready pod/kaniko
-
-    - name: WAIT WHEN READY=FALSE
-      run: |
-        kubectl wait --for=condition=Ready-false pod/kaniko
 
     - name: Watch kaniko job events real time
       run: |
