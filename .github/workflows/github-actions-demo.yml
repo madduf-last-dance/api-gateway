@@ -65,26 +65,26 @@ jobs:
                     path: config.json
         EOF
 
+    - name: Get Kaniko Job Events (if job fails)
+      run: |
+        kubectl events
+
+    - name: Get Kaniko Job Events (if job fails)
+      run: |
+        kubectl events
+
     - name: Wait for Kaniko Job to finish
       run: |
         kubectl wait --for=condition=complete job/kaniko-job --timeout=30s
 
-    - name: Get Kaniko Job Logs (if job fails)
-      if: failure()
-      run: |
-        kubectl logs kaniko-job
-
     - name: Get Kaniko Job Events (if job fails)
-      if: failure()
       run: |
         kubectl events
-
 
     - name: Get Kaniko Job Events for kaniko-job (if job fails)
       if: failure()
       run: |
         kubectl get events --field-selector involvedObject.name=kaniko-job
-
 
     - name: Describe Kaniko Job (if job fails)
       if: failure()
