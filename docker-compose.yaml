@@ -1,0 +1,15 @@
+services:
+
+  nestjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Only will build development stage from our dockerfile
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    # Run a command against the development stage of the image
+    command: npm run start:dev
