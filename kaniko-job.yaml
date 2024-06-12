@@ -10,7 +10,7 @@ spec:
         image: gcr.io/kaniko-project/executor:latest
         args:
         - --dockerfile=/workspace/Dockerfile
-        - --context=/workspace
+        - --context=git://github.com/madduf-last-dance/api-gateway.git#feature/kubernetes
         - --destination=nedeljkovignjevic/api-gateway:latest
         volumeMounts:
           - name: kaniko-secret

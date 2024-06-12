@@ -31,13 +31,9 @@ jobs:
       run: |
         minikube ssh -- sudo mkdir -p workspace
 
-    - name: Copy code to Minikube workspace
+    - name: Copy Dockerfile to Minikube workspace
       run: |
         minikube cp Dockerfile minikube:/home/docker/workspace/ 
-        minikube cp package.json minikube:/home/docker/workspace/ 
-        minikube cp package-lock.json minikube:/home/docker/workspace/ 
-        minikube cp tsconfig.json minikube:/home/docker/workspace/
-        minikube cp tsconfig.build.json minikube:/home/docker/workspace/
 
     - name: Create Kaniko Job to build the image and to push the image to dockerhub
       run: |
