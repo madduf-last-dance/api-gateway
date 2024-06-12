@@ -20,6 +20,7 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
         name: "USER_SERVICE",
         transport: Transport.TCP,
         options: {
+          host: 'user-service',
           port: 1313,
         },
       },

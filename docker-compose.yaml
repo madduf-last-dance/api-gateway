@@ -1,6 +1,10 @@
+networks:
+  hotel-reservation-app-network:
+    external: true
+
 services:
 
-  nestjs:
+  api-gateway:
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,5 +15,7 @@ services:
       - /usr/src/app/node_modules
     ports:
       - "3000:3000"
+    networks:
+      - hotel-reservation-app-network
     # Run a command against the development stage of the image
     command: npm run start:dev
