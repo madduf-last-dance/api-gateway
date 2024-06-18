@@ -5,6 +5,7 @@ import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   const options = new DocumentBuilder()
     .setTitle("Reservation App API")
     .setDescription(
@@ -18,6 +19,13 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup("api", app, document);
+
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
 }
