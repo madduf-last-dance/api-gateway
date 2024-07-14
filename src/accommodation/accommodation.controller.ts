@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Inject, Post } from "@nestjs/common";
 import { ClientProxy, MessagePattern, Payload } from "@nestjs/microservices";
 import { ApiTags } from "@nestjs/swagger";
+import { CreateAccommodationDto } from "./dto/create-accommodation.dto";
 
 @ApiTags("Accommodation")
 @Controller("accommodation")
@@ -11,7 +12,7 @@ export class AccommodationController {
   ) {}
 
   @Post("/createAccommodation")
-  createAccommodation(@Body() aDto: any) {
+  createAccommodation(@Body() aDto: CreateAccommodationDto) {
     return this.accommodationClient.send<string>("createAccommodation", aDto);
   }
   @Post("/updateAccommodation")
