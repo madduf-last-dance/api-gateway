@@ -20,7 +20,7 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
         name: "USER_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: 'user-service',
+          host: "user-service",
           port: 1313,
         },
       },
@@ -28,6 +28,7 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
         name: "ACCOMMODATION_SERVICE",
         transport: Transport.TCP,
         options: {
+          host: "accommodation-service",
           port: 1312,
         },
       },
@@ -35,15 +36,7 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
         name: "RESERVATION_SERVICE",
         transport: Transport.TCP,
         options: {
-          port: 1315,
-        },
-      },
-    ]),
-    ClientsModule.register([
-      {
-        name: "RESERVATION_SERVICE",
-        transport: Transport.TCP,
-        options: {
+          host: "reservation-service",
           port: 1315,
         },
       },

@@ -1,6 +1,15 @@
-import { Body, Controller, Delete, Get, Inject, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Post,
+  Query,
+} from "@nestjs/common";
 import { ClientProxy, MessagePattern, Payload } from "@nestjs/microservices";
 import { ApiTags } from "@nestjs/swagger";
+import { SearchDto } from "./dto/search.dto";
 
 @ApiTags("Accommodation")
 @Controller("accommodation")
@@ -39,5 +48,9 @@ export class AccommodationController {
       price: 120;
     };
     return this.accommodationClient.send<string>("checkAvailability", aDto);
+  }
+  @Get("/search")
+  search(@Query() dto: SearchDto) {
+    return this.accommodationClient.send<string>("search", dto);
   }
 }

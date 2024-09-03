@@ -15,24 +15,19 @@ export class UserController {
   login(@Body() loginDto: LoginDto) {
     return this.userClient
       .send<string>("login", loginDto)
-      .pipe(
-        (response) => response,
-      );
+      .pipe((response) => response);
   }
   @Post("/register/guest")
   registerGuest(@Body() registerDto: RegisterDto) {
-    return this.userClient
-      .send<string>("registerGuest", registerDto);
+    return this.userClient.send<string>("registerGuest", registerDto);
   }
   @Post("/register/host")
   registerHost(@Body() registerDto: RegisterDto) {
-    return this.userClient
-      .send<string>("registerHost", registerDto);
+    return this.userClient.send<string>("registerHost", registerDto);
   }
   @Post("/update")
   update(@Body() updateDto: UpdateUserDto) {
-    return this.userClient
-      .send<string>("updateUser", updateDto);
+    return this.userClient.send<string>("updateUser", updateDto);
   }
   @Get("/test")
   @UseGuards(AuthGuard)
