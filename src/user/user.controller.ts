@@ -1,11 +1,15 @@
-import { Body, Controller, Get, Inject, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Post, UseGuards, Request } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { AuthGuard } from "src/guard/auth.guard";
 import { LoginDto } from "./dtos/login.dto";
 import { RegisterDto } from "./dtos/register.dto";
 import { UpdateUserDto } from "./dtos/update.dto";
 import { Role } from "./dtos/role.enum";
+import { UpdateCredentialsDto } from "./dtos/update-credentials.dto";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
+@ApiTags("User")
+@ApiBearerAuth()
 @Controller("user")
 export class UserController {
   constructor(
@@ -28,6 +32,12 @@ export class UserController {
   @Post("/update")
   update(@Body() updateDto: UpdateUserDto) {
     return this.userClient.send<string>("updateUser", updateDto);
+  }
+  @Post("/updateCredentials")
+  @UseGuards(AuthGuard)
+  updateCredentials(@Request() req, @Body() updateDto: UpdateCredentialsDto) {
+    updateDto.id = req["user"].id;
+    return this.userClient.send<string>("updateCredentials", updateDto);
   }
   @Get("/test")
   @UseGuards(AuthGuard)

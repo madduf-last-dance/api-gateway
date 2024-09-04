@@ -9,6 +9,7 @@ import {
 } from "@nestjs/common";
 import { ClientProxy, MessagePattern, Payload } from "@nestjs/microservices";
 import { ApiTags } from "@nestjs/swagger";
+import { CreateReservationDto } from "./dto/create-reservation.dto";
 
 @ApiTags("Reservation")
 @Controller("reservation")
@@ -19,7 +20,7 @@ export class ReservationController {
   ) {}
 
   @Post("/createReservation")
-  create(@Body() rDto: any) {
+  create(@Body() rDto: CreateReservationDto) {
     return this.reservationClient.send<string>("createReservation", rDto);
   }
   @Get("/findAllReservations")
