@@ -39,7 +39,6 @@ export class UserController {
     updateDto.id = req["user"].id;
     return this.userClient.send<string>("updateCredentials", updateDto);
   }
-
   @Get("/test")
   @UseGuards(AuthGuard)
   getTest() {
