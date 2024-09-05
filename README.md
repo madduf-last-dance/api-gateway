@@ -7,8 +7,8 @@ docker compose up -d
 ```
 
 ## TODO:
-- search (location, startDate, endDate, numberOfGuests)
-- update username/password
+- search (location, startDate, endDate, numberOfGuests) ✔️
+- update username/password ✔️
 - removeUser host/guest
 - create accomodation (dodati benefite i fotografije)
 - create reservation - proveriti preklapanja, proveri availability
