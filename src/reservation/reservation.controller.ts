@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Post,
   Put,
 } from "@nestjs/common";
@@ -31,6 +32,14 @@ export class ReservationController {
   findOne(@Body() id: number) {
     return this.reservationClient.send<string>("findOneReservation", id);
   }
+  @Get("/findByUser/:id")
+  findByUser(@Param('id') id: string) {
+    return this.reservationClient.send<string>("findAllByUser", id);
+  }
+  @Get("/findByAccommodation/:id")
+  findByAccommodation(@Param('id') id: string) {
+    return this.reservationClient.send<string>("findAllByAccommodation", id);
+  }
   @Put("updateReservation")
   update(@Body() rDto: any) {
     return this.reservationClient.send<string>("updateReservation", rDto);
@@ -43,18 +52,18 @@ export class ReservationController {
   reserve(@Body() rDto: any) {
     return this.reservationClient.send<string>("reserve", rDto);
   }
-  @Delete("/cancelReservationPending")
-  cancelReservationPending(@Body() reservationId: number) {
+  @Delete("/cancelReservationPending/:id")
+  cancelReservationPending(@Param('id') id: string) {
     return this.reservationClient.send<string>(
       "cancelReservationPending",
-      reservationId,
+      id,
     );
   }
-  @Delete("/cancelReservationAccepted")
-  cancelReservationAccepted(@Body() reservationId: number) {
+  @Delete("/cancelReservationAccepted/:id")
+  cancelReservationAccepted(@Param('id') id: string) {
     return this.reservationClient.send<string>(
       "cancelReservationAccepted",
-      reservationId,
+      id,
     );
   }
 }

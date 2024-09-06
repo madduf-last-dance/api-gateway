@@ -30,18 +30,27 @@ export class UserController {
     return this.userClient.send<string>("registerHost", registerDto);
   }
   @Post("/update")
-  update(@Body() updateDto: UpdateUserDto) {
+  @UseGuards(AuthGuard)
+  update(@Request() req, @Body() updateDto: UpdateUserDto) {
+    updateDto.id = req["user"].sub;
+    updateDto.username = req["user"].username;
+    console.log(updateDto,req["user"]);
     return this.userClient.send<string>("updateUser", updateDto);
   }
   @Post("/updateCredentials")
   @UseGuards(AuthGuard)
   updateCredentials(@Request() req, @Body() updateDto: UpdateCredentialsDto) {
-    updateDto.id = req["user"].id;
+    updateDto.id = req["user"].sub;
     return this.userClient.send<string>("updateCredentials", updateDto);
   }
   @Get("/test")
   @UseGuards(AuthGuard)
   getTest() {
     return "nikola";
+  }
+  @Get("/profile")
+  @UseGuards(AuthGuard)
+  profile(@Request() req) {
+    return this.userClient.send<any>("findOneUser", req["user"].username)
   }
 }

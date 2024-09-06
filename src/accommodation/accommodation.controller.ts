@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Post,
   Query,
 } from "@nestjs/common";
@@ -32,9 +33,13 @@ export class AccommodationController {
   findAllAccommodation() {
     return this.accommodationClient.send<string>("findAllAccommodation", "");
   }
-  @Get("/findOneAccommodation")
-  findOneAccommodation() {
-    return this.accommodationClient.send<string>("findOneAccommodation", 1);
+  @Get("/findOneAccommodation/:id")
+  findOneAccommodation(@Param('id') id: string) {
+    return this.accommodationClient.send<string>("findOneAccommodation", id);
+  }
+  @Get("/findAllAccommodationsHost")
+  findAllByHost() {
+    return this.accommodationClient.send<string>("findAllAccommodationsHost", 1);
   }
   @Delete("removeAccommodation")
   removeAccommodation(@Body() id: number) {

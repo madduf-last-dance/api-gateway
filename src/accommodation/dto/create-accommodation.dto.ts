@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { AvailabilityDto } from "./availability.dto";
 
 export class CreateAccommodationDto {
   @ApiProperty({default: 'Kuca'})
@@ -18,4 +19,16 @@ export class CreateAccommodationDto {
   
   @ApiProperty({default: [1,2,3]})
   benefitIds: number[];
+
+  @ApiProperty({default: false})
+  isPerGuest: boolean;
+
+  @ApiProperty({default: false})
+  isAutomatic: boolean;
+
+  @ApiProperty()
+  availability:AvailabilityDto[];
+
+  @ApiProperty()
+  photos: string[];
 }
