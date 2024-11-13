@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-gateway
+  labels:
+    app: api-gateway
 spec:
   replicas: 1
   selector:
@@ -9,16 +11,15 @@ spec:
       app: api-gateway
   template:
     metadata:
+      name: api-gateway
       labels:
         app: api-gateway
     spec:
       containers:
-      - name: api-gateway
-        image: nedeljkovignjevic/api-gateway:latest
-        imagePullPolicy: Always
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
-        ports:
-        - containerPort: 3000
+        - name: api-gateway
+          image: nikola7/api-gateway
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+      restartPolicy: Always
+      

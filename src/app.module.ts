@@ -20,7 +20,7 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
         name: "USER_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: "user-service",
+          host: 'user-service.default.svc.cluster.local',
           port: 1313,
         },
       },
@@ -28,7 +28,6 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
         name: "ACCOMMODATION_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: "accommodation-service",
           port: 1312,
         },
       },
@@ -36,7 +35,7 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
         name: "RESERVATION_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: "reservation-service",
+          host: 'reservation-service.default.svc.cluster.local',
           port: 1315,
         },
       },

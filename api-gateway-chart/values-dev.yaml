@@ -1,0 +1,24 @@
+nameOverride: api-gateway
+
+deployment:
+  image:
+    repository: nikola7/api-gateway
+    tag: "0.1"
+  replicaCount: 1
+  containerPort: 3000
+
+service: 
+  type: NodePort
+  port: 3000
+  targetPort: 3000
+
+ingress:
+  enabled: false
+  className: nginx
+  paths:
+      path: /
+      backend:
+        service:
+          name: api-gateway
+          port:
+            number: 3000
