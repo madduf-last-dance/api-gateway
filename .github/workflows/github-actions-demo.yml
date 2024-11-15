@@ -3,8 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - feature/kubernetes
-
+      - develop
 jobs:
   build:
     runs-on: ubuntu-latest

@@ -28,6 +28,7 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
         name: "ACCOMMODATION_SERVICE",
         transport: Transport.TCP,
         options: {
+          host: 'accommodation-service.default.svc.cluster.local',
           port: 1312,
         },
       },
