@@ -7,10 +7,15 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { jwtConstants } from "./constant";
+import { Reflector } from "@nestjs/core";
+import { Roles } from "./roles.decorator";
+import { Payload } from "@nestjs/microservices";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(private jwtService: JwtService,
+      private reflector: Reflector
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -25,10 +30,19 @@ export class AuthGuard implements CanActivate {
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
       request["user"] = payload;
+      const roles = this.reflector.get(Roles, context.getHandler());
+      if(!roles) {
+        return true;
+      }
+      if(!roles.includes(payload['role'])) {
+        throw new UnauthorizedException();
+      };
+      return true;
     } catch {
       throw new UnauthorizedException();
     }
-    return true;
+
+  
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {

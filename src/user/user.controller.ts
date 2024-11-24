@@ -1,12 +1,13 @@
-import { Body, Controller, Get, Inject, Post, UseGuards, Request } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Post, UseGuards, Request, UseFilters } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { AuthGuard } from "src/guard/auth.guard";
 import { LoginDto } from "./dtos/login.dto";
 import { RegisterDto } from "./dtos/register.dto";
 import { UpdateUserDto } from "./dtos/update.dto";
-import { Role } from "./dtos/role.enum";
 import { UpdateCredentialsDto } from "./dtos/update-credentials.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { Roles } from "src/guard/roles.decorator";
+import { firstValueFrom } from "rxjs";
 
 @ApiTags("User")
 @ApiBearerAuth()
@@ -16,10 +17,9 @@ export class UserController {
     @Inject("USER_SERVICE") private readonly userClient: ClientProxy,
   ) {}
   @Post("/login")
-  login(@Body() loginDto: LoginDto) {
-    return this.userClient
-      .send<string>("login", loginDto)
-      .pipe((response) => response);
+  async login(@Body() loginDto: LoginDto) {
+    const response = await firstValueFrom(this.userClient.send<string>("login", loginDto));
+    return response;
   }
   @Post("/register/guest")
   registerGuest(@Body() registerDto: RegisterDto) {
@@ -44,6 +44,7 @@ export class UserController {
     return this.userClient.send<string>("updateCredentials", updateDto);
   }
   @Get("/test")
+  @Roles(['HOST'])
   @UseGuards(AuthGuard)
   getTest() {
     return "nikola";

@@ -7,13 +7,18 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
+  Request,
 } from "@nestjs/common";
 import { ClientProxy, MessagePattern, Payload } from "@nestjs/microservices";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CreateAccommodationDto } from "./dto/create-accommodation.dto";
 import { SearchDto } from "./dto/search.dto";
+import { AuthGuard } from "src/guard/auth.guard";
+import { Roles } from "src/guard/roles.decorator";
 
 @ApiTags("Accommodation")
+@ApiBearerAuth()
 @Controller("accommodation")
 export class AccommodationController {
   constructor(
@@ -38,8 +43,11 @@ export class AccommodationController {
     return this.accommodationClient.send<string>("findOneAccommodation", id);
   }
   @Get("/findAllAccommodationsHost")
-  findAllByHost() {
-    return this.accommodationClient.send<string>("findAllAccommodationsHost", 1);
+  @UseGuards(AuthGuard)
+  @Roles(['HOST'])
+  findAllByHost(@Request() req) {
+    const id = req["user"].sub;
+    return this.accommodationClient.send<string>("findAllAccommodationsHost", id);
   }
   @Delete("removeAccommodation")
   removeAccommodation(@Body() id: number) {
