@@ -49,7 +49,7 @@ export class ReservationController {
     return this.reservationClient.send<string>("removeReservation", id);
   }
   @Post("/reserve")
-  reserve(@Body() rDto: any) {
+  reserve(@Body() rDto: CreateReservationDto) {
     return this.reservationClient.send<string>("reserve", rDto);
   }
   @Delete("/cancelReservationPending/:id")

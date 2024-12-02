@@ -7,6 +7,7 @@ import { jwtConstants } from "./guard/constant";
 import { UserController } from "./user/user.controller";
 import { ReservationController } from "./reservation/reservation.controller";
 import { AccommodationController } from "./accommodation/accommodation.controller";
+import { RatingController } from "./rating/rating.controller";
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
         name: "USER_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: 'user-service.default.svc.cluster.local',
+          host: 'localhost',
           port: 1313,
         },
       },
@@ -28,6 +29,7 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
         name: "ACCOMMODATION_SERVICE",
         transport: Transport.TCP,
         options: {
+          host: 'localhost',
           port: 1312,
         },
       },
@@ -35,8 +37,16 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
         name: "RESERVATION_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: 'reservation-service.default.svc.cluster.local',
+          host: 'localhost',
           port: 1315,
+        },
+      },
+      {
+        name: "RATING_SERVICE",
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: 1316,
         },
       },
     ]),
@@ -46,6 +56,7 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
     UserController,
     ReservationController,
     AccommodationController,
+    RatingController,
   ],
   providers: [AppService],
 })
