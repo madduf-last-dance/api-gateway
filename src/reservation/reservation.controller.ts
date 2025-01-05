@@ -7,10 +7,13 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
+  Request
 } from "@nestjs/common";
 import { ClientProxy, MessagePattern, Payload } from "@nestjs/microservices";
 import { ApiTags } from "@nestjs/swagger";
 import { CreateReservationDto } from "./dto/create-reservation.dto";
+import { AuthGuard } from "src/guard/auth.guard";
 
 @ApiTags("Reservation")
 @Controller("reservation")
@@ -18,7 +21,7 @@ export class ReservationController {
   constructor(
     @Inject("RESERVATION_SERVICE")
     private readonly reservationClient: ClientProxy,
-  ) {}
+  ) { }
 
   @Post("/createReservation")
   create(@Body() rDto: CreateReservationDto) {
@@ -73,4 +76,16 @@ export class ReservationController {
       id,
     );
   }
+  @Get("/findGuestAndAccepted/:accommodationId")
+  @UseGuards(AuthGuard)
+  findGuestAndAccepted(@Param('accommodationId') accommodationId: string, @Request() req) {
+    const message = {
+      guestId: req["user"].sub,
+      accommodationId: accommodationId,
+    };
+    return this.reservationClient.send<string>(
+      "findAllGuestAndAcceptedReservations", message
+    );
+  }
+
 }
