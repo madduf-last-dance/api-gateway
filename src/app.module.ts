@@ -7,9 +7,34 @@ import { jwtConstants } from "./guard/constant";
 import { UserController } from "./user/user.controller";
 import { ReservationController } from "./reservation/reservation.controller";
 import { AccommodationController } from "./accommodation/accommodation.controller";
+import { PrometheusModule, makeCounterProvider } from '@willsoto/nestjs-prometheus';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggingInterceptor } from './logging.interceptor';
+import { CustomRpcExceptionFilter } from "./filters/rpc-exception.filter";
+import { OpenTelemetryModule } from "nestjs-otel";
+
+const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
+  metrics: {
+    hostMetrics: true, // Includes Host Metrics
+    apiMetrics: {
+      enable: true, // Includes api metrics
+      defaultAttributes: {
+        // You can set default labels for api metrics
+        custom: 'label',
+      },
+      ignoreRoutes: ['/favicon.ico'], // You can ignore specific routes (See https://docs.nestjs.com/middleware#excluding-routes for options)
+      ignoreUndefinedRoutes: false, //Records metrics for all URLs, even undefined ones
+      prefix: 'my_prefix', // Add a custom prefix to all API metrics
+    },
+  },
+});
 
 @Module({
   imports: [
+    OpenTelemetryModuleConfig,
+    PrometheusModule.register({
+    }
+    ),
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
@@ -48,6 +73,31 @@ import { AccommodationController } from "./accommodation/accommodation.controlle
     ReservationController,
     AccommodationController,
   ],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: CustomRpcExceptionFilter,
+    },
+    makeCounterProvider({
+      name: 'http_request_total',
+      help: 'Total of HTTP request',
+      labelNames: ['route', 'method', 'code'],
+    }),
+    makeCounterProvider({
+      name: 'unique_visitors',
+      help: 'Number of unique visitors (ip, timestamp, browser)',
+      labelNames: ['ip', 'timestamp', 'browser'],
+    }),
+    makeCounterProvider({
+      name: 'node_network_receive_bytes_total',
+      help: 'Total number of bytes received on the network',
+      labelNames: ['interface'],
+    })
+
+  ],
 })
 export class AppModule {}
