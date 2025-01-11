@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
   Request,
+  Logger,
 } from "@nestjs/common";
 import { ClientProxy, MessagePattern, Payload } from "@nestjs/microservices";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
@@ -16,11 +17,14 @@ import { CreateAccommodationDto } from "./dto/create-accommodation.dto";
 import { SearchDto } from "./dto/search.dto";
 import { AuthGuard } from "src/guard/auth.guard";
 import { Roles } from "src/guard/roles.decorator";
+import { SaveAvailabilityDto } from "./dto/save-availability.dto";
+import { LoggingInterceptor } from "src/logging.interceptor";
 
 @ApiTags("Accommodation")
 @ApiBearerAuth()
 @Controller("accommodation")
 export class AccommodationController {
+  private readonly logger = new Logger(LoggingInterceptor.name);
   constructor(
     @Inject("ACCOMMODATION_SERVICE")
     private readonly accommodationClient: ClientProxy,
@@ -66,5 +70,17 @@ export class AccommodationController {
   @Get("/search")
   search(@Query() dto: SearchDto) {
     return this.accommodationClient.send<string>("search", dto);
+  }
+  @Post("/saveAvailabilities/:id")
+  @UseGuards(AuthGuard)
+  @Roles(['HOST'])
+  async saveAvailabilities(@Request() req, @Param('id') accommodationId: string, @Body() availabilites: any) {
+    const hostId = req["user"].sub;
+    const payload: SaveAvailabilityDto = {
+      hostId: hostId,
+      accommodationId: accommodationId,
+      availabilities: availabilites
+    };
+    return this.accommodationClient.send<string>("saveAvailabilities", payload);
   }
 }
