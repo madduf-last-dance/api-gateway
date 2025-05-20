@@ -69,6 +69,13 @@ export class ReservationController {
       id,
     );
   }
+  @Get("/accept/:id")
+  acceptReservation(@Param('id') id: string) {
+    return this.reservationClient.send<string>(
+      "acceptReservation",
+      id,
+    );
+  }
   @Get("/findGuestAndAccepted/:accommodationId")
   @UseGuards(AuthGuard)
   findGuestAndAccepted(@Param('accommodationId') accommodationId: string, @Request() req) {

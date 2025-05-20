@@ -1,9 +1,14 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { ValidationPipe } from "@nestjs/common";
+import { Logger, ValidationPipe } from "@nestjs/common";
+import { CustomRpcExceptionFilter } from "./filters/rpc-exception.filter";
+import { LoggingInterceptor } from "./logging.interceptor";
+import otelSDK from "./tracing/tracing";
 
 async function bootstrap() {
+  await otelSDK.start();
+
   const app = await NestFactory.create(AppModule);
 
   const options = new DocumentBuilder()
@@ -26,7 +31,9 @@ async function bootstrap() {
     credentials: true,
   });
 
+  console.log(process.env.JAEGER_ENDPOINT);
+  app.useLogger(new Logger());
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+  await app.listen(8080);
 }
 bootstrap();
