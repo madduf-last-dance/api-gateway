@@ -53,9 +53,16 @@ export class AccommodationController {
     const id = req["user"].sub;
     return this.accommodationClient.send<string>("findAllAccommodationsHost", id);
   }
-  @Delete("removeAccommodation")
-  removeAccommodation(@Body() id: number) {
-    return this.accommodationClient.send<string>("removeAccommodation", id);
+  @Delete(":id")
+  @UseGuards(AuthGuard)
+  @Roles(['HOST'])
+  async removeAccommodation(@Request() req, @Param('id') id: number): Promise<void> {
+    const userId = req["user"].sub;
+    const payload = {
+      hostId: userId,
+      id: id,
+    };
+    return this.accommodationClient.send<void>("removeAccommodation", payload).toPromise();
   }
   @Get("/checkAvaliability")
   checkAvailability() {
@@ -74,13 +81,13 @@ export class AccommodationController {
   @Post("/saveAvailabilities/:id")
   @UseGuards(AuthGuard)
   @Roles(['HOST'])
-  async saveAvailabilities(@Request() req, @Param('id') accommodationId: string, @Body() availabilites: any) {
+  async saveAvailabilities(@Request() req, @Param('id') accommodationId: string, @Body() availabilites: any): Promise<void>  {
     const hostId = req["user"].sub;
     const payload: SaveAvailabilityDto = {
       hostId: hostId,
       accommodationId: accommodationId,
       availabilities: availabilites
     };
-    return this.accommodationClient.send<string>("saveAvailabilities", payload);
+    this.accommodationClient.send<string>("saveAvailabilities", payload);
   }
 }

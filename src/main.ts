@@ -5,6 +5,7 @@ import { Logger, ValidationPipe } from "@nestjs/common";
 import { CustomRpcExceptionFilter } from "./filters/rpc-exception.filter";
 import { LoggingInterceptor } from "./logging.interceptor";
 import otelSDK from "./tracing/tracing";
+import { urlencoded, json } from 'express';
 
 async function bootstrap() {
   await otelSDK.start();
@@ -34,6 +35,8 @@ async function bootstrap() {
   console.log(process.env.JAEGER_ENDPOINT);
   app.useLogger(new Logger());
   app.useGlobalPipes(new ValidationPipe());
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
   await app.listen(8080);
 }
 bootstrap();
