@@ -12,6 +12,7 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './logging.interceptor';
 import { CustomRpcExceptionFilter } from "./filters/rpc-exception.filter";
 import { OpenTelemetryModule } from "nestjs-otel";
+import { RatingController } from "./rating/rating.controller";
 
 const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
   metrics: {
@@ -65,6 +66,14 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
           port: 1315,
         },
       },
+      {
+        name: "RATING_SERVICE",
+        transport: Transport.TCP,
+        options: {
+          host: 'rating-service.default.svc.cluster.local',
+          port: 1316,
+        },
+      },
     ]),
   ],
   controllers: [
@@ -72,6 +81,7 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
     UserController,
     ReservationController,
     AccommodationController,
+    RatingController,
   ],
   providers: [AppService,
     {
