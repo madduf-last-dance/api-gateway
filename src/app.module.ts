@@ -46,8 +46,7 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
         name: "USER_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
-          //host: 'user-service.default.svc.cluster.local',
+          host: 'user-service.default.svc.cluster.local',
           port: 1313,
         },
       },
@@ -55,8 +54,7 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
         name: "ACCOMMODATION_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
-          //host: 'accommodation-service.default.svc.cluster.local',
+          host: 'accommodation-service.default.svc.cluster.local',
           port: 1312,
         },
       },
@@ -64,8 +62,7 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
         name: "RESERVATION_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
-          //host: 'reservation-service.default.svc.cluster.local',
+          host: 'reservation-service.default.svc.cluster.local',
           port: 1315,
         },
       },
@@ -73,8 +70,7 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
         name: "RATING_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
-          //host: 'rating-service.default.svc.cluster.local',
+          host: 'rating-service.default.svc.cluster.local',
           port: 1316,
         },
       },
