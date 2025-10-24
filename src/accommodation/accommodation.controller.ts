@@ -90,4 +90,10 @@ export class AccommodationController {
     };
     this.accommodationClient.send<string>("saveAvailabilities", payload);
   }
+  @Get("/getAllBenefits")
+  @UseGuards(AuthGuard)
+  @Roles(['HOST'])
+  async getAllBenefits() {
+    return this.accommodationClient.send<string>("allBenefits", {});
+  }
 }
