@@ -17,8 +17,10 @@ import { CreateAccommodationDto } from "./dto/create-accommodation.dto";
 import { SearchDto } from "./dto/search.dto";
 import { AuthGuard } from "src/guard/auth.guard";
 import { Roles } from "src/guard/roles.decorator";
-import { SaveAvailabilityDto } from "./dto/save-availability.dto";
+import { AvailabilityIdDto, SaveAvailabilityDto } from "./dto/save-availability.dto";
 import { LoggingInterceptor } from "src/logging.interceptor";
+import { firstValueFrom } from 'rxjs';
+import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
 
 @ApiTags("Accommodation")
 @ApiBearerAuth()
@@ -78,16 +80,22 @@ export class AccommodationController {
   search(@Query() dto: SearchDto) {
     return this.accommodationClient.send<string>("search", dto);
   }
-  @Post("/saveAvailabilities/:id")
+  @Post('/saveAvailabilities/:id')
   @UseGuards(AuthGuard)
   @Roles(['HOST'])
-  async saveAvailabilities(@Request() req, @Param('id') accommodationId: string, @Body() availabilites: any): Promise<void>  {
-    const hostId = req["user"].sub;
-    const payload: SaveAvailabilityDto = {
-      hostId: hostId,
-      accommodationId: accommodationId,
-      availabilities: availabilites
+  async saveAvailabilities(
+    @Request() req: any,
+    @Param('id') accommodationId: string,
+    @Body() availabilities: AvailabilityIdDto[],
+  ) {
+    const hostId = Number(req.user.sub);
+    const payload = {
+      hostId,
+      accommodationId: Number(accommodationId),
+      availabilities,
     };
-    this.accommodationClient.send<string>("saveAvailabilities", payload);
+
+    // Wait and return microservice response
+    return await firstValueFrom(this.accommodationClient.send<string>('saveAvailabilities', payload));
   }
 }
