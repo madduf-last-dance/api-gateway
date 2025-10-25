@@ -43,26 +43,34 @@ export class AccommodationController {
     return this.accommodationClient.send<string>("findAllAccommodation", "");
   }
   @Get("/findOneAccommodation/:id")
-  findOneAccommodation(@Param('id') id: string) {
+  findOneAccommodation(@Param("id") id: string) {
     return this.accommodationClient.send<string>("findOneAccommodation", id);
   }
   @Get("/findAllAccommodationsHost")
   @UseGuards(AuthGuard)
-  @Roles(['HOST'])
+  @Roles(["HOST"])
   findAllByHost(@Request() req) {
     const id = req["user"].sub;
-    return this.accommodationClient.send<string>("findAllAccommodationsHost", id);
+    return this.accommodationClient.send<string>(
+      "findAllAccommodationsHost",
+      id,
+    );
   }
   @Delete(":id")
   @UseGuards(AuthGuard)
-  @Roles(['HOST'])
-  async removeAccommodation(@Request() req, @Param('id') id: number): Promise<void> {
+  @Roles(["HOST"])
+  async removeAccommodation(
+    @Request() req,
+    @Param("id") id: number,
+  ): Promise<void> {
     const userId = req["user"].sub;
     const payload = {
       hostId: userId,
       id: id,
     };
-    return this.accommodationClient.send<void>("removeAccommodation", payload).toPromise();
+    return this.accommodationClient
+      .send<void>("removeAccommodation", payload)
+      .toPromise();
   }
   @Get("/checkAvaliability")
   checkAvailability() {
@@ -80,19 +88,23 @@ export class AccommodationController {
   }
   @Post("/saveAvailabilities/:id")
   @UseGuards(AuthGuard)
-  @Roles(['HOST'])
-  async saveAvailabilities(@Request() req, @Param('id') accommodationId: string, @Body() availabilites: any): Promise<void>  {
+  @Roles(["HOST"])
+  async saveAvailabilities(
+    @Request() req: any,
+    @Param("id") accommodationId: string,
+    @Body() availabilites: any,
+  ): Promise<void> {
     const hostId = req["user"].sub;
     const payload: SaveAvailabilityDto = {
       hostId: hostId,
       accommodationId: accommodationId,
-      availabilities: availabilites
+      availabilities: availabilites,
     };
     this.accommodationClient.send<string>("saveAvailabilities", payload);
   }
   @Get("/getAllBenefits")
   @UseGuards(AuthGuard)
-  @Roles(['HOST'])
+  @Roles(["HOST"])
   async getAllBenefits() {
     return this.accommodationClient.send<string>("allBenefits", {});
   }
