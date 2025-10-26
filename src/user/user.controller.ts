@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Post, UseGuards, Request, UseFilters } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Post, UseGuards, Request, UseFilters, Delete, Param, HttpException } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
 import { AuthGuard } from "src/guard/auth.guard";
 import { LoginDto } from "./dtos/login.dto";
@@ -53,5 +53,14 @@ export class UserController {
   @UseGuards(AuthGuard)
   profile(@Request() req) {
     return this.userClient.send<any>("findOneUser", req["user"].username)
+  }
+  @Delete("/removeUser/:id")
+  async removeUser(@Param('id') userId: string) {
+    try {
+      return await this.userClient.send<any>("removeUser", userId).toPromise();
+    } catch (error) {
+      // Forward microservice error as HTTP exception
+      throw new HttpException(error.message || 'Failed to delete user', error.code || 500);
+    }
   }
 }
