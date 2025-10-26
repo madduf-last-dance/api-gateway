@@ -17,10 +17,16 @@ import { CreateAccommodationDto } from "./dto/create-accommodation.dto";
 import { SearchDto } from "./dto/search.dto";
 import { AuthGuard } from "src/guard/auth.guard";
 import { Roles } from "src/guard/roles.decorator";
-import { AvailabilityIdDto, SaveAvailabilityDto } from "./dto/save-availability.dto";
+import {
+  AvailabilityIdDto,
+  SaveAvailabilityDto,
+} from "./dto/save-availability.dto";
 import { LoggingInterceptor } from "src/logging.interceptor";
-import { firstValueFrom } from 'rxjs';
-import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { firstValueFrom } from "rxjs";
+import {
+  BadRequestException,
+  InternalServerErrorException,
+} from "@nestjs/common";
 
 @ApiTags("Accommodation")
 @ApiBearerAuth()
@@ -38,6 +44,7 @@ export class AccommodationController {
   }
   @Post("/updateAccommodation")
   updateAccommodation(@Body() aDto: any) {
+    console.log(aDto);
     return this.accommodationClient.send<string>("updateAccommodation", aDto);
   }
   @Get("/findAllAccommodation")
@@ -45,26 +52,34 @@ export class AccommodationController {
     return this.accommodationClient.send<string>("findAllAccommodation", "");
   }
   @Get("/findOneAccommodation/:id")
-  findOneAccommodation(@Param('id') id: string) {
+  findOneAccommodation(@Param("id") id: string) {
     return this.accommodationClient.send<string>("findOneAccommodation", id);
   }
   @Get("/findAllAccommodationsHost")
   @UseGuards(AuthGuard)
-  @Roles(['HOST'])
+  @Roles(["HOST"])
   findAllByHost(@Request() req) {
     const id = req["user"].sub;
-    return this.accommodationClient.send<string>("findAllAccommodationsHost", id);
+    return this.accommodationClient.send<string>(
+      "findAllAccommodationsHost",
+      id,
+    );
   }
   @Delete(":id")
   @UseGuards(AuthGuard)
-  @Roles(['HOST'])
-  async removeAccommodation(@Request() req, @Param('id') id: number): Promise<void> {
+  @Roles(["HOST"])
+  async removeAccommodation(
+    @Request() req,
+    @Param("id") id: number,
+  ): Promise<void> {
     const userId = req["user"].sub;
     const payload = {
       hostId: userId,
       id: id,
     };
-    return this.accommodationClient.send<void>("removeAccommodation", payload).toPromise();
+    return this.accommodationClient
+      .send<void>("removeAccommodation", payload)
+      .toPromise();
   }
   @Get("/checkAvaliability")
   checkAvailability() {
@@ -78,14 +93,15 @@ export class AccommodationController {
   }
   @Get("/search")
   search(@Query() dto: SearchDto) {
+    console.log(dto);
     return this.accommodationClient.send<string>("search", dto);
   }
-  @Post('/saveAvailabilities/:id')
+  @Post("/saveAvailabilities/:id")
   @UseGuards(AuthGuard)
-  @Roles(['HOST'])
+  @Roles(["HOST"])
   async saveAvailabilities(
     @Request() req: any,
-    @Param('id') accommodationId: string,
+    @Param("id") accommodationId: string,
     @Body() availabilities: AvailabilityIdDto[],
   ) {
     const hostId = Number(req.user.sub);
@@ -96,6 +112,29 @@ export class AccommodationController {
     };
 
     // Wait and return microservice response
-    return await firstValueFrom(this.accommodationClient.send<string>('saveAvailabilities', payload));
+    return await firstValueFrom(
+      this.accommodationClient.send<string>("saveAvailabilities", payload),
+    );
+  }
+
+  @Get("/calculateTotalPrice/:id")
+  // @UseGuards(AuthGuard)
+  // @Roles(['HOST','GUEST'])
+  async calculateTotalPrice(
+    @Request() req: any,
+    @Param("id") accommodationId: string,
+    @Body() availabilities: AvailabilityIdDto[],
+  ) {
+    const hostId = Number(req.user.sub);
+    const payload = {
+      hostId,
+      accommodationId: Number(accommodationId),
+      availabilities,
+    };
+
+    // Wait and return microservice response
+    return await firstValueFrom(
+      this.accommodationClient.send<string>("saveAvailabilities", payload),
+    );
   }
 }
