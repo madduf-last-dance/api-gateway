@@ -1,10 +1,7 @@
 # api-gateway
+[![Watch the video](https://img.youtube.com/vi/BBAtAM7vtgc/hqdefault.jpg)](https://youtu.be/BBAtAM7vtgc)
 
-## Run docker containers
-```
-docker network create hotel-reservation-app-network
-docker compose up -d
-```
+<img width="750" height="747" alt="image" src="https://github.com/user-attachments/assets/eb41de90-7e3a-4b05-a838-42e73316dde7" />
 
 ## TODO:
 - search (location, startDate, endDate, numberOfGuests) ✔️
