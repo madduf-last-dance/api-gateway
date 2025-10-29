@@ -7,9 +7,12 @@ import { jwtConstants } from "./guard/constant";
 import { UserController } from "./user/user.controller";
 import { ReservationController } from "./reservation/reservation.controller";
 import { AccommodationController } from "./accommodation/accommodation.controller";
-import { PrometheusModule, makeCounterProvider } from '@willsoto/nestjs-prometheus';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { LoggingInterceptor } from './logging.interceptor';
+import {
+  PrometheusModule,
+  makeCounterProvider,
+} from "@willsoto/nestjs-prometheus";
+import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
+import { LoggingInterceptor } from "./logging.interceptor";
 import { CustomRpcExceptionFilter } from "./filters/rpc-exception.filter";
 import { OpenTelemetryModule } from "nestjs-otel";
 import { RatingController } from "./rating/rating.controller";
@@ -21,11 +24,11 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
       enable: true, // Includes api metrics
       defaultAttributes: {
         // You can set default labels for api metrics
-        custom: 'label',
+        custom: "label",
       },
-      ignoreRoutes: ['/favicon.ico'], // You can ignore specific routes (See https://docs.nestjs.com/middleware#excluding-routes for options)
+      ignoreRoutes: ["/favicon.ico"], // You can ignore specific routes (See https://docs.nestjs.com/middleware#excluding-routes for options)
       ignoreUndefinedRoutes: false, //Records metrics for all URLs, even undefined ones
-      prefix: 'my_prefix', // Add a custom prefix to all API metrics
+      prefix: "my_prefix", // Add a custom prefix to all API metrics
     },
   },
 });
@@ -33,9 +36,7 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
 @Module({
   imports: [
     OpenTelemetryModuleConfig,
-    PrometheusModule.register({
-    }
-    ),
+    PrometheusModule.register({}),
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
@@ -46,8 +47,8 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
         name: "USER_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
-          //host: 'user-service.default.svc.cluster.local',
+          // host: 'localhost',
+          host: "user-service.default.svc.cluster.local",
           port: 1313,
         },
       },
@@ -55,8 +56,8 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
         name: "ACCOMMODATION_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
-          //host: 'accommodation-service.default.svc.cluster.local',
+          // host: "localhost",
+          host: "accommodation-service.default.svc.cluster.local",
           port: 1312,
         },
       },
@@ -64,8 +65,8 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
         name: "RESERVATION_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
-          //host: 'reservation-service.default.svc.cluster.local',
+          // host: "localhost",
+          host: "reservation-service.default.svc.cluster.local",
           port: 1315,
         },
       },
@@ -73,8 +74,8 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
         name: "RATING_SERVICE",
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
-          //host: 'rating-service.default.svc.cluster.local',
+          // host: "localhost",
+          host: "rating-service.default.svc.cluster.local",
           port: 1316,
         },
       },
@@ -87,7 +88,8 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
     AccommodationController,
     RatingController,
   ],
-  providers: [AppService,
+  providers: [
+    AppService,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
@@ -97,21 +99,20 @@ const OpenTelemetryModuleConfig = OpenTelemetryModule.forRoot({
       useClass: CustomRpcExceptionFilter,
     },
     makeCounterProvider({
-      name: 'http_request_total',
-      help: 'Total of HTTP request',
-      labelNames: ['route', 'method', 'code'],
+      name: "http_request_total",
+      help: "Total of HTTP request",
+      labelNames: ["route", "method", "code"],
     }),
     makeCounterProvider({
-      name: 'unique_visitors',
-      help: 'Number of unique visitors (ip, timestamp, browser)',
-      labelNames: ['ip', 'timestamp', 'browser'],
+      name: "unique_visitors",
+      help: "Number of unique visitors (ip, timestamp, browser)",
+      labelNames: ["ip", "timestamp", "browser"],
     }),
     makeCounterProvider({
-      name: 'node_network_receive_bytes_total',
-      help: 'Total number of bytes received on the network',
-      labelNames: ['interface'],
-    })
-
+      name: "node_network_receive_bytes_total",
+      help: "Total number of bytes received on the network",
+      labelNames: ["interface"],
+    }),
   ],
 })
 export class AppModule {}
